@@ -5,16 +5,13 @@ import { moveClockwise, moveCounterClockwise } from '../state/action-creators';
 
 const Wheel = (props) => {
      const { wheel, moveClockwise, moveCounterClockwise } = props;
-     console.log(wheel);
 
      const cog = [0, 1, 2, 3, 4, 5];
 
      const handle_CCW_click = () => {
-          console.log('counter clockwise');
           moveCounterClockwise();
      }
      const handle_CW_click = () => {
-          console.log('clockwise');
           moveClockwise();
      }
 
