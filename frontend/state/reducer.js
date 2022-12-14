@@ -43,8 +43,8 @@ function selectedAnswer(state = initialSelectedAnswerState, action) {
 const initialMessageState = ''
 function infoMessage(state = initialMessageState, action) {
      switch (action.type) {
-          case types.RESET_FORM:
-               return initialMessageState
+          // case types.RESET_FORM:
+          //      return initialMessageState
           case types.SET_INFO_MESSAGE:
                return action.payload
           default:
@@ -59,7 +59,25 @@ const initialFormState = {
      newFalseAnswer: '',
 }
 function form(state = initialFormState, action) {
-     return state
+     switch (action.type) {
+          case types.RESET_FORM:
+               return initialFormState;
+          case types.INPUT_CHANGE: {
+               const { name, value } = action.payload;
+               return {
+                    ...state,
+                    [name]: value
+               };
+          }
+          // return ({
+          //      ...state,
+          //      newQuestion: '', newTrueAnswer: '', newFalseAnswer: ''
+          // })
+          // return undefined;
+          default:
+               return state
+
+     }
 }
 
-export default combineReducers({ wheel, quiz, selectedAnswer, infoMessage, form })
+export default combineReducers({ wheel, quiz, selectedAnswer, infoMessage, form, initialFormState })

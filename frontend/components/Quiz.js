@@ -20,7 +20,7 @@ export function Quiz(props) {
           postAnswer({ quiz_id, answer_id })
      }
 
-     if (question) { console.log(question.quiz_id) }
+     // if (question) { console.log(question.quiz_id) }
      return (
           <div id="wrapper">
                {

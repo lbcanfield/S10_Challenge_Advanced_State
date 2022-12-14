@@ -27,7 +27,10 @@ export function setQuiz(quiz) {
      return { type: types.SET_QUIZ_INTO_STATE, payload }
 }
 
-export function inputChange() { }
+export function inputChange({ name, value }) {
+     const payload = { name, value }
+     return { type: types.INPUT_CHANGE, payload }
+}
 
 export function resetForm() {
      return { type: types.RESET_FORM }
@@ -37,14 +40,11 @@ export function resetForm() {
 export function fetchQuiz() {
      return function (dispatch) {
           dispatch(resetForm)
-          // First, dispatch an action to reset the quiz state (so the "Loading next quiz..." message can display)
           axios.get('http://localhost:9000/api/quiz/next')
                .then(response => {
-                    // console.log(response.data)
+                    console.log(response.data)
                     dispatch(setQuiz(response.data))
                })
-          // On successful GET:
-          // - Dispatch an action to send the obtained quiz to its state
      }
 }
 export function postAnswer({ quiz_id, answer_id }) {
@@ -52,21 +52,34 @@ export function postAnswer({ quiz_id, answer_id }) {
           // On successful POST:
           axios.post('http://localhost:9000/api/quiz/answer', { quiz_id, answer_id })
                .then(response => {
-                    // console.log(response)
-                    dispatch(setMessage(response.data.message))
+                    const successMessage = response.data.message
+                    dispatch(setMessage(successMessage))
+                    dispatch(fetchQuiz())
                })
-          dispatch(fetchQuiz())
-
-          // - Dispatch an action to reset the selected answer state
-          // - Dispatch an action to set the server message to state
-          // - Dispatch the fetching of the next quiz
      }
+
 }
-export function postQuiz() {
+export function postQuiz(data) {
+     const question = {
+          question_text: data.newQuestion,
+          true_answer_text: data.newTrueAnswer,
+          false_answer_text: data.newFalseAnswer
+     }
      return function (dispatch) {
           // On successful POST:
-          // - Dispatch the correct message to the the appropriate state
-          // - Dispatch the resetting of the form
+          axios.post('http://localhost:9000/api/quiz/new', question)
+               .then(response => {
+                    // console.log(response.data);
+                    const sMsg = response.data.question;
+                    dispatch(setMessage(`Congrats: "${sMsg}" is a great question!`))
+                    dispatch(resetForm())
+
+
+               })
+
+               // .catch(error)
+               .finally()
+
      }
 }
-// ❗ On promise rejections, use log statements or breakpoints, and put an appropriate error message in state
+   // ❗ On promise rejections, use log statements or breakpoints, and put an appropriate error message in state
